@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite serve --mode development",
     "build": "vite build",
+    "build-test": "vite build --mode test",
     "preview": "vite preview",
     "tailwind": "tailwind-config-viewer -o -c tailwind.config.cjs",
     "generate:version": "generate-version-file dist public",
