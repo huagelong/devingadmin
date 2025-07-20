@@ -21,7 +21,7 @@
       <!-- 操作前置扩展 -->
       <template #operationBeforeExtend="{ record }">
         <a-link v-auth="['system:code:preview']" @click="previewRef.open(record.id)"><icon-eye /> 预览</a-link>
-        <a-popconfirm content="同步会重置字段配置生成信息，确定同步吗?" position="bottom" @ok="sync(record.id)">
+        <a-popconfirm content="同步会重置表结构信息，确定同步吗?" position="bottom" @ok="sync(record.id)">
           <a-link v-auth="['system:code:sync']"><icon-sync /> 同步</a-link>
         </a-popconfirm>
         <a-link v-auth="['system:code:update']" @click="() => editRef.open(record.id)"><icon-edit /> 编辑</a-link>
