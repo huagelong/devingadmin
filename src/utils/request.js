@@ -76,12 +76,16 @@ function createService() {
           })();
       }else if (response.data.code == 65) {
           err('服务器资源不存在');
+          return response.data;
       }else if (response.data.code == 50) {
           err('服务器内部错误');
+          return response.data;
       }else if (response.data.code == 1001 || response.data.code == 61) {
           err('没有权限访问');
+          return response.data;
       }else{
          err('未知错误');
+         return response.data;
       }
     },
     (error) => {
