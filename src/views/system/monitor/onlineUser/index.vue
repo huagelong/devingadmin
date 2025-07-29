@@ -20,7 +20,7 @@
 
   const kick = async (row) => {
     const response = await monitor.kickUser({ id: row.id,app_id:row.app_id })
-    response.success && Message.success(response.message)
+    response && response.success && Message.success(response.message)
   }
 
   const crud = reactive({

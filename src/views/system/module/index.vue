@@ -57,8 +57,10 @@
     }
     const text = record.enabled ? '停用' : '启用'
     const response = await module.modifyStatus({ name: record.name, status: !record.enabled })
-    response.success && Message.success(`模块${text}成功`)
-    crudRef.value.refresh()
+    response && response.success && Message.success(`模块${text}成功`)
+    if (response && response.success) {
+      crudRef.value.refresh()
+    }
   }
 
   const handleInstall = async (record) => {
@@ -67,7 +69,7 @@
       return false
     }
     const response = await module.install({ name: record.name })
-    response.success && Message.success(response.message)
+    response && response.success && Message.success(response.message)
   }
 
   const deleteModule = async (done) => {
@@ -78,11 +80,13 @@
     }
 
     const response = await module.deletes({ name: name.value })
-    if (response.success) {
+    if (response && response.success) {
       Message.success('模块删除成功')
       crudRef.value.refresh()
       currentModule.value = {}
       done(true)
+    }else{
+      done(false)
     }
   }
 

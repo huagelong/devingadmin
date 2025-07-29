@@ -362,7 +362,6 @@ const save = async (done) => {
   }
   form.value.options = formOptions.value
   const response = await generate.update(form.value)
-  console.log(response)
   response && response.success && Message.success(response.message)
   if (response && response.success) {
     emit('success', true)

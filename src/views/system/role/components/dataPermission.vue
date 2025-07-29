@@ -101,9 +101,13 @@
     const nodes = tree.value.maTree.getCheckedNodes()
     const ids = nodes.map( item => item.id )
     const response = await role.updateDataPermission(form.value.id, { data_scope: form.value.data_scope, dept_ids: ids })
-    response.success && Message.success(response.message)
-    emit('success')
-    done(true)
+    response && response.success && Message.success(response.message)
+    if (response && response.success) {
+      emit('success')
+      done(true)
+    }else{
+      done(false)
+    }
   } 
 
   const close = () => visible.value = false
