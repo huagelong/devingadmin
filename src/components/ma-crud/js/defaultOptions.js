@@ -135,7 +135,7 @@ export default {
     // tag页设置标签标题的字段名称
     titleDataIndex: undefined,
     // 显示宽度
-    width: 600,
+    width: 800,
     // 是否全屏，只有modal有效
     isFull: false,
     // 表单布局
