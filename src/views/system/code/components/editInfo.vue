@@ -362,9 +362,14 @@ const save = async (done) => {
   }
   form.value.options = formOptions.value
   const response = await generate.update(form.value)
-  response.success && Message.success(response.message)
-  emit('success', true)
-  done(true)
+  console.log(response)
+  response && response.success && Message.success(response.message)
+  if (response && response.success) {
+    emit('success', true)
+    done(true)
+  }else{
+    done(false)
+  }
 }
 
 // 全选 / 全不选
