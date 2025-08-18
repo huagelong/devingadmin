@@ -80,6 +80,7 @@ export default {
     closeLeftTag: 'Close left tag',
     closeTag: 'Close current tag',
     closeOtherTag: 'Close other tag',
+    closeAllTag: 'Close all tag',
   },
   noticeTitle: 'System Prompted',
   save: 'Save',
