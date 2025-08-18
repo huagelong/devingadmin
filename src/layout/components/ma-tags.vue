@@ -4,7 +4,7 @@
       <div class="tags" ref="tags">
         <a v-for="tag in tagStore.tags" :key="tag.path" @contextmenu.prevent="openContextMenu($event, tag)"
           :class="route.fullPath == tag.path ? 'active' : ''"
-          @click="tagJump(tag)">
+          @click="tagJump(tag)" @click.middle="closeTag(tag)">
           {{ tag.customTitle ? tag.customTitle : appStore.i18n ? ($t('menus.' + tag.name).indexOf('.') > 0 ? tag.title : $t('menus.' + tag.name)) : tag.title }}
           <icon-close class="tag-icon" v-if="!tag.affix" @click.stop="closeTag(tag)" />
         </a>
@@ -35,8 +35,12 @@
             {{ $t('sys.tags.closeTag') }}
           </li>
           <li @click="tagToolCloseOtherTag">
-            <icon-close-circle-fill />
+            <icon-close-circle />
             {{ $t('sys.tags.closeOtherTag') }}
+          </li>
+          <li @click="tagToolCloseAllTag">
+            <icon-close-circle-fill />
+            {{ $t('sys.tags.closeAllTag') }}
           </li>
         </ul>
       </template>
@@ -266,6 +270,13 @@ const tagToolCloseOtherTag = () => {
     } else {
       closeTag(tag)
     }
+  })
+  contextMenuVisible.value = false
+}
+const tagToolCloseAllTag = () => {
+  const list = [...tagStore.tags]
+  list.forEach(tag => {
+      closeTag(tag)
   })
   contextMenuVisible.value = false
 }

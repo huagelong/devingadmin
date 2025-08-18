@@ -80,6 +80,7 @@ export default {
     closeLeftTag: '关闭左侧标签',
     closeTag: '关闭当前标签',
     closeOtherTag: '关闭其他标签',
+    closeAllTag: '关闭全部标签',
   },
   noticeTitle: '系统提示',
   save: '保存',
