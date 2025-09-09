@@ -378,12 +378,18 @@ const init = () => {
     }
   }
 
-
-  if (record.value.component_type === 3) {
-    formOptions.value.tag_id = record.value?.options?.tag_id ?? undefined
-    formOptions.value.tag_name = record.value?.options?.tag_name ?? undefined
-    formOptions.value.tag_view_name = record.value?.options?.tag_view_name ?? undefined
+    // 设置formOptions数据
+  for (let name in record.value.options) {
+    formOptions.value[name] = record.value.options[name]
   }
+
+  // if (record.value.component_type === 3) {
+  //   formOptions.value.tag_id = record.value?.options?.tag_id ?? undefined
+  //   formOptions.value.tag_name = record.value?.options?.tag_name ?? undefined
+  //   formOptions.value.tag_view_name = record.value?.options?.tag_view_name ?? undefined
+  // }
+
+
 
   // 请求表字段
   generate.getTableColumns({ table_id: record.value.id }).then( res => {

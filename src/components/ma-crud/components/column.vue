@@ -54,6 +54,7 @@
           :align="row.align || 'left'"
           :fixed="row.fixed"
           :sortable="row.sortable"
+          v-role="row.roles || []"
           v-else
       >
         <template #title>
