@@ -28,6 +28,7 @@
   import dept from '@/api/system/dept'
   import { Message } from '@arco-design/web-vue'
   import LeaderList from './leader.vue'
+  import * as common from '@/utils/common'
 
   const crudRef = ref()
   const leaderRef = ref()
@@ -36,6 +37,7 @@
     const response = await dept.changeStatus({ id, status })
     if (response.success) {
       Message.success(response.message)
+      common.refreshTag()
     }
   }
 

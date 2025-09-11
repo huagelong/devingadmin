@@ -31,6 +31,7 @@
   import { ref, reactive, computed } from 'vue'
   import menu from '@/api/system/menu'
   import { Message } from '@arco-design/web-vue'
+  import * as common from '@/utils/common'
 
   const crudRef = ref()
   const currentParentId = ref()
@@ -48,6 +49,7 @@
     const response = await menu.changeStatus({ id, status })
     if (response.success) {
       Message.success(response.message)
+      common.refreshTag()
     }
   }
 
