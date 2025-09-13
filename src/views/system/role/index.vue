@@ -10,7 +10,7 @@
       <!-- 状态列 -->
       <template #status="{ record }">
         <a-switch :checked-value="1" unchecked-value="2" @change="changeStatus($event, record)"
-          :default-checked="record.status == 1" />
+          :default-checked="record.status == 1" :disabled="record.code === 'superAdmin'" />
       </template>
       <!-- 操作列 -->
       <template #operationCell="{ record }">

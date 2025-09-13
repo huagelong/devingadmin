@@ -46,7 +46,7 @@ import {ref, reactive} from 'vue'
 
   const run = async (row) => {
     const response = await crontab.run({ id: row.id })
-    response.success && Message.success(response.message)
+    response && response.success && Message.success(response.message)
   }
 
   const openLogModal = (row) => {

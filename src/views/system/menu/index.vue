@@ -31,6 +31,7 @@
   import { ref, reactive, computed } from 'vue'
   import menu from '@/api/system/menu'
   import { Message } from '@arco-design/web-vue'
+  import * as common from '@/utils/common'
 
   const crudRef = ref()
   const currentParentId = ref()
@@ -48,6 +49,7 @@
     const response = await menu.changeStatus({ id, status })
     if (response.success) {
       Message.success(response.message)
+      common.refreshTag()
     }
   }
 
@@ -97,7 +99,7 @@
       title: '上级菜单', dataIndex: 'parent_id', hide: true, formType: 'tree-select', 
       dict: { url: 'system/menu/tree', params: { onlyMenu: true } }, addDefaultValue: 0,
       editDefaultValue: (record) => {
-        return record.parent_id == 0 ? undefined : record.parent_id
+        return record.parent_id
       }
     },
     { 

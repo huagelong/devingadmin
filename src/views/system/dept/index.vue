@@ -28,6 +28,7 @@
   import dept from '@/api/system/dept'
   import { Message } from '@arco-design/web-vue'
   import LeaderList from './leader.vue'
+  import * as common from '@/utils/common'
 
   const crudRef = ref()
   const leaderRef = ref()
@@ -36,6 +37,7 @@
     const response = await dept.changeStatus({ id, status })
     if (response.success) {
       Message.success(response.message)
+      common.refreshTag()
     }
   }
 
@@ -73,9 +75,9 @@
     { title: 'ID', dataIndex: 'id', addDisplay: false, editDisplay: false, width: 50, hide: true },
     {
       title: '上级部门', dataIndex: 'parent_id', hide: true, formType: 'tree-select', 
-      dict: { url: 'system/dept/tree' },
+      dict: { url: 'system/dept/tree' },addDefaultValue: 0,
       editDefaultValue: (record) => {
-        return record.parent_id == 0 ? undefined : record.parent_id
+        return record.parent_id
       }
     },
     { 

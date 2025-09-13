@@ -69,7 +69,7 @@
 
   const sync = async (id) => {
     const response = await generate.sync(id)
-    response.success && Message.success(response.message)
+    response && response.success && Message.success(response.message)
   }
 
   const generateCode = async (ids) => {

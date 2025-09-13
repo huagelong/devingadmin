@@ -82,12 +82,6 @@
             </a-row>
             <a-row :gutter="24">
               <a-col :xs="24" :md="12" :xl="12">
-                <a-form-item label="包名" field="package_name" label-col-flex="auto" :label-col-style="{ width: '100px' }"
-                  extra="指定控制器文件所在控制器目录的二级目录名，如：Premission">
-                  <a-input allow-clear v-model="form.package_name" placeholder="请输入包名" />
-                </a-form-item>
-              </a-col>
-              <a-col :xs="24" :md="12" :xl="12">
                 <a-form-item label="组件样式" field="component_type" label-col-flex="auto"
                   :label-col-style="{ width: '100px' }" extra="设置新增和修改组件显示方式，Tag页表示新打开的一个标签来显示新增和编辑">
                   <a-radio-group v-model:model-value="form.component_type" type="button">
@@ -362,9 +356,13 @@ const save = async (done) => {
   }
   form.value.options = formOptions.value
   const response = await generate.update(form.value)
-  response.success && Message.success(response.message)
-  emit('success', true)
-  done(true)
+  response && response.success && Message.success(response.message)
+  if (response && response.success) {
+    emit('success', true)
+    done(true)
+  }else{
+    done(false)
+  }
 }
 
 // 全选 / 全不选
@@ -380,12 +378,18 @@ const init = () => {
     }
   }
 
-
-  if (record.value.component_type === 3) {
-    formOptions.value.tag_id = record.value?.options?.tag_id ?? undefined
-    formOptions.value.tag_name = record.value?.options?.tag_name ?? undefined
-    formOptions.value.tag_view_name = record.value?.options?.tag_view_name ?? undefined
+    // 设置formOptions数据
+  for (let name in record.value.options) {
+    formOptions.value[name] = record.value.options[name]
   }
+
+  // if (record.value.component_type === 3) {
+  //   formOptions.value.tag_id = record.value?.options?.tag_id ?? undefined
+  //   formOptions.value.tag_name = record.value?.options?.tag_name ?? undefined
+  //   formOptions.value.tag_view_name = record.value?.options?.tag_view_name ?? undefined
+  // }
+
+
 
   // 请求表字段
   generate.getTableColumns({ table_id: record.value.id }).then( res => {
