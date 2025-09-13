@@ -61,6 +61,7 @@
       <template #content>
         <a-doption value="userCenter"><icon-user /> {{ $t('sys.userCenter') }}</a-doption>
         <a-doption value="clearCache"><icon-delete /> {{ $t('sys.clearCache') }}</a-doption>
+        <a-doption value="clearAll" v-if="userStore.roles.includes('superAdmin')"><icon-lock /> {{ $t('sys.clearAll') }}</a-doption>
         <a-divider style="margin: 5px 0" />
         <a-doption value="logout"><icon-poweroff /> {{ $t('sys.logout') }}</a-doption>
       </template>
@@ -87,6 +88,7 @@
   import { info } from '@/utils/common'
   import commonApi from '@/api/common'
   import LockScreen from '@/components/LockScreen.vue';
+  import monitor from '@/api/system/monitor'
   const { t } = useI18n()
   const messageStore = useMessageStore()
   const userStore = useUserStore()
@@ -96,7 +98,6 @@
   const isFullScreen = ref(false)
   const showLogoutModal = ref(false)
   const isDev = ref(import.meta.env.DEV)
-
   const isLocked = ref(false);
   isLocked.value = appStore.getIsLocked();
 
@@ -115,6 +116,11 @@
     }
     if (name === 'clearCache') {
       const res = await commonApi.clearAllCache()
+      tool.local.remove('dictData')
+      res.success && Message.success(res.message)
+    }
+    if (name === 'clearAll') {
+      const res = await monitor.clear()
       tool.local.remove('dictData')
       res.success && Message.success(res.message)
     }
