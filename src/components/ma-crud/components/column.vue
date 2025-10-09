@@ -18,7 +18,7 @@
           :tooltip="row.tooltip ?? true"
           :align="row.align || 'left'"
           :fixed="row.fixed"
-          v-if="row.children && row.children.length > 0"
+          v-if="row.children && row.children.length > 0 && hasRole(row.roles || [])"
       >
         <column
             @refresh="() => refresh()"
@@ -54,8 +54,7 @@
           :align="row.align || 'left'"
           :fixed="row.fixed"
           :sortable="row.sortable"
-          v-role="row.roles || []"
-          v-else
+          v-else-if="hasRole(row.roles || [])"
       >
         <template #title>
           <slot :name="`tableTitle-${row.dataIndex}`" v-bind="{ column: row }">{{ row.title }}</slot>
@@ -195,6 +194,7 @@ import { isFunction, get, isArray, isObject } from 'lodash'
 import CustomRender from '../js/custom-render'
 import tool from '@/utils/tool'
 import commonApi from '@/api/common'
+import { hasRole } from '@/utils/roleCheck'
 
 import formInput from '@cps/ma-form/formItem/form-input.vue'
 
