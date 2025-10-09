@@ -13,7 +13,7 @@
           </div>
           <div class="leading-5 mt-2">
             <a-tag color="blue" bordered>免费开源、可商用</a-tag>
-            欢迎使用devinggo后台权限管理系统，系统开源、免费使用。喜欢的请点个 ⭐Star。
+            欢迎使用devinggo后台权限管理系统，系统开源、免费使用。喜欢的请点个 <a-link href="https://github.com/huagelong/devinggo" target="_blank">⭐Star</a-link>。
           </div>
         </div>
       </div>

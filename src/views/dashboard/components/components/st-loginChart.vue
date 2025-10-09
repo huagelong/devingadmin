@@ -7,6 +7,7 @@
 <script setup>
 import { nextTick, onMounted, ref } from "vue"
 import { graphic } from "echarts"
+import dashboardApi from '@/api/system/dashboard.js'
 
 function graphicFactory(side) {
   return {
@@ -22,19 +23,8 @@ function graphicFactory(side) {
   }
 }
 
-const xAxis = ref([
-  "2022-07-06",
-  "2022-07-07",
-  "2022-07-08",
-  "2022-07-09",
-  "2022-07-10",
-  "2022-07-11",
-  "2022-07-12",
-  "2022-07-13",
-  "2022-07-14",
-  "2022-07-15",
-]);
-const chartsData = ref([32, 56, 61, 89, 12, 33, 56, 92, 180, 25]);
+const xAxis = ref([])
+const chartsData = ref([])
 const graphicElements = ref([
   graphicFactory({ left: "2.6%" }),
   graphicFactory({ right: 0 }),
@@ -163,5 +153,43 @@ const loginChartOptions = ref({
       },
     },
   ],
+})
+
+// 获取登录图表数据
+const getLoginChart = async () => {
+  try {
+    const response = await dashboardApi.getLoginChart(10)
+    if (response.success) {
+      xAxis.value = response.data.xAxis || []
+      chartsData.value = response.data.chartsData || []
+      
+      // 更新图表配置
+      loginChartOptions.value.xAxis.data = xAxis.value
+      loginChartOptions.value.series[0].data = chartsData.value
+    }
+  } catch (error) {
+    console.error('获取登录图表数据失败:', error)
+    // 使用默认数据
+    xAxis.value = [
+      "2022-07-06",
+      "2022-07-07",
+      "2022-07-08",
+      "2022-07-09",
+      "2022-07-10",
+      "2022-07-11",
+      "2022-07-12",
+      "2022-07-13",
+      "2022-07-14",
+      "2022-07-15",
+    ]
+    chartsData.value = [32, 56, 61, 89, 12, 33, 56, 92, 180, 25]
+    
+    loginChartOptions.value.xAxis.data = xAxis.value
+    loginChartOptions.value.series[0].data = chartsData.value
+  }
+}
+
+onMounted(() => {
+  getLoginChart()
 })
 </script>

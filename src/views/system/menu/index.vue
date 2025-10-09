@@ -99,7 +99,7 @@
       title: '上级菜单', dataIndex: 'parent_id', hide: true, formType: 'tree-select', 
       dict: { url: 'system/menu/tree', params: { onlyMenu: true } }, addDefaultValue: 0,
       editDefaultValue: (record) => {
-        return record.parent_id == 0 ? undefined : record.parent_id
+        return record.parent_id
       }
     },
     { 

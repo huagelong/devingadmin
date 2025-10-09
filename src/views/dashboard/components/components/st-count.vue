@@ -10,11 +10,15 @@
             <a-space size="large" class="mr-3">
               <div class="text-right">
                 <div>总数</div>
-                <div>100</div>
+                <div>{{ statistics.userStats?.total || 0 }}</div>
               </div>
               <div class="text-right">
                 <div>新增</div>
-                <div><icon-caret-up class="text-green-600" /> 15</div>
+                <div>
+                  <icon-caret-up class="text-green-600" v-if="statistics.userStats?.new > 0" />
+                  <icon-caret-down class="text-red-600" v-else-if="statistics.userStats?.new < 0" />
+                  {{ statistics.userStats?.new || 0 }}
+                </div>
               </div>
             </a-space>
           </div>
@@ -29,11 +33,15 @@
             <a-space size="large" class="mr-3">
               <div class="text-right">
                 <div>总数</div>
-                <div>100</div>
+                <div>{{ statistics.attachmentStats?.total || 0 }}</div>
               </div>
               <div class="text-right">
                 <div>新增</div>
-                <div><icon-caret-down class="text-red-600" /> 15</div>
+                <div>
+                  <icon-caret-up class="text-green-600" v-if="statistics.attachmentStats?.new > 0" />
+                  <icon-caret-down class="text-red-600" v-else-if="statistics.attachmentStats?.new < 0" />
+                  {{ statistics.attachmentStats?.new || 0 }}
+                </div>
               </div>
             </a-space>
           </div>
@@ -48,11 +56,15 @@
             <a-space size="large" class="mr-3">
               <div class="text-right">
                 <div>总数</div>
-                <div>100</div>
+                <div>{{ statistics.loginStats?.total || 0 }}</div>
               </div>
               <div class="text-right">
                 <div>新增</div>
-                <div><icon-caret-down class="text-red-600" /> 15</div>
+                <div>
+                  <icon-caret-up class="text-green-600" v-if="statistics.loginStats?.new > 0" />
+                  <icon-caret-down class="text-red-600" v-else-if="statistics.loginStats?.new < 0" />
+                  {{ statistics.loginStats?.new || 0 }}
+                </div>
               </div>
             </a-space>
           </div>
@@ -67,11 +79,15 @@
             <a-space size="large" class="mr-3">
               <div class="text-right">
                 <div>总数</div>
-                <div>100</div>
+                <div>{{ statistics.operationStats?.total || 0 }}</div>
               </div>
               <div class="text-right">
                 <div>新增</div>
-                <div><icon-caret-up class="text-green-600" /> 15</div>
+                <div>
+                  <icon-caret-up class="text-green-600" v-if="statistics.operationStats?.new > 0" />
+                  <icon-caret-down class="text-red-600" v-else-if="statistics.operationStats?.new < 0" />
+                  {{ statistics.operationStats?.new || 0 }}
+                </div>
               </div>
             </a-space>
           </div>
@@ -80,6 +96,35 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import dashboardApi from '@/api/system/dashboard.js'
+
+// 统计数据
+const statistics = ref({
+  userStats: { total: 0, new: 0 },
+  attachmentStats: { total: 0, new: 0 },
+  loginStats: { total: 0, new: 0 },
+  operationStats: { total: 0, new: 0 }
+})
+
+// 获取统计数据
+const getStatistics = async () => {
+  try {
+    const response = await dashboardApi.getStatistics()
+    if (response.success) {
+      statistics.value = response.data
+    }
+  } catch (error) {
+    console.error('获取统计数据失败:', error)
+  }
+}
+
+onMounted(() => {
+  getStatistics()
+})
+</script>
 
 <style scoped>
 .en-title {

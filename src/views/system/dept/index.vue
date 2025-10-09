@@ -75,9 +75,9 @@
     { title: 'ID', dataIndex: 'id', addDisplay: false, editDisplay: false, width: 50, hide: true },
     {
       title: '上级部门', dataIndex: 'parent_id', hide: true, formType: 'tree-select', 
-      dict: { url: 'system/dept/tree' },
+      dict: { url: 'system/dept/tree' },addDefaultValue: 0,
       editDefaultValue: (record) => {
-        return record.parent_id == 0 ? undefined : record.parent_id
+        return record.parent_id
       }
     },
     { 
