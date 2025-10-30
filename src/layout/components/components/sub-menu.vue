@@ -49,7 +49,7 @@
   height: 1em;
 }
 
-[devinggo-skin="devinggo"] .arco-menu-selected .icon {
+[devinggo-skin="default"] .arco-menu-selected .icon {
   fill: rgb(var(--primary-6));
 }
 </style>
