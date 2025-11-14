@@ -203,9 +203,9 @@
       commonRules: [{ required: true, message: '账户必填' }]
     },
     {
-      title: '所属部门', dataIndex: 'dept_ids', hide: true, formType: 'tree-select',
+      title: '所属部门', dataIndex: 'dept_ids', hide: false, formType: 'tree-select', search: true,
       multiple: true, treeCheckable: true, treeCheckStrictly: true,
-      dict: { url: 'system/dept/tree' }, commonRules: [{ required: true, message: '所属部门必选' }],
+      dict: { url: 'system/dept/tree', translation:true }, commonRules: [{ required: true, message: '所属部门必选' }],
       editDefaultValue: async (record) => {
         const response = await user.read(record.id)
         return response.data.deptList.map(item => item.id )
@@ -218,8 +218,8 @@
     },
     { title: '昵称', dataIndex: 'nickname', width: 120 },
     { 
-      title: '角色', dataIndex: 'role_ids', width: 120, formType: 'select', multiple: true,
-      dict: { url: 'system/role/list', props: { label: 'name', value: 'id' } }, hide: true, 
+      title: '角色', dataIndex: 'role_ids', width: 120, formType: 'select', multiple: true, search: true,
+      dict: { url: 'system/role/list', props: { label: 'name', value: 'id' }, translation:true }, hide: false,
       commonRules: [{ required: true, message: '角色必选' }],
       editDefaultValue: async (record) => {
         const response = await user.read(record.id)
@@ -231,8 +231,8 @@
       commonRules: [{ match: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: '请输入正确的手机号码' }]
     },
     { 
-      title: '岗位', dataIndex: 'post_ids', width: 120, formType: 'select', multiple: true,
-      dict: { url: 'system/post/list', props: { label: 'name', value: 'id' } }, hide: true,
+      title: '岗位', dataIndex: 'post_ids', width: 120, formType: 'select', multiple: true, search: true,
+      dict: { url: 'system/post/list', props: { label: 'name', value: 'id' } , translation:true}, hide: false,
       commonRules: [{ required: true, message: '岗位必选' }],
       editDefaultValue: async (record) => {
         const response = await user.read(record.id)

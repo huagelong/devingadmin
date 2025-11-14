@@ -37,7 +37,7 @@
           </template>
         </a-table-column>
         <a-table-column title="搜索隐藏" data-index="hide" align="center">
-          <template #cell="{ record }"><a-checkbox v-model="record.search"
+          <template #cell="{ record }"><a-checkbox v-model="record.search" :disabled="true"
               @change="changeColumn($event, 'search', record.dataIndex)" /></template>
         </a-table-column>
         <a-table-column title="表格隐藏" data-index="hide" align="center">

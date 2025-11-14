@@ -144,7 +144,7 @@ function throttle(fn, wait = 1500) {
 }
 
 function stringify(data) {
-  return qs.stringify(data, { allowDots: true, encode: false });
+  return qs.stringify(data, { allowDots: true, encode: false, arrayFormat: 'brackets' });
 }
 
 /**

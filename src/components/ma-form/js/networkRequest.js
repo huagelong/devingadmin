@@ -6,7 +6,7 @@ import { Message } from '@arco-design/web-vue'
 import tool from '@/utils/tool'
 
 export const allowUseDictComponent  = ['radio', 'checkbox', 'select', 'transfer', 'treeSelect', 'tree-select', 'cascader']
-export const allowCoverComponent    = ['radio', 'checkbox', 'select', 'transfer', 'cascader']
+export const allowCoverComponent    = ['radio', 'checkbox', 'select', 'transfer', 'cascader', 'treeSelect', 'tree-select']
 
 export const coverSourceArrayToObj = (arr) => {
   if (arr === null || arr.length === 0) {
@@ -63,20 +63,41 @@ export const handlerDictProps = (item, tmpArr) => {
     valueName = 'key'
   }
   if (allowCoverComponent.includes(item.formType)) {
-    data = tmpArr.map(dicItem => {
-      const label = dicItem[(item.dict.props && item.dict.props.label) || labelName]
-      let tmp = dicItem[(item.dict.props && item.dict.props.value) || valueName]
-      let disabled = (typeof dicItem['disabled'] == 'undefined') ? false : ( dicItem['disabled'] === true ? true : false )
-      let indeterminate = (typeof dicItem['indeterminate'] == 'undefined') ? false : ( dicItem['indeterminate'] === true ? true : false )
-      let value
-      if (item.dict.name || item.dict.data) value = tmp?.toString() ?? tmp
-      else if (tmp === 'true') value = true
-      else if (tmp === 'false') value = false
-      else value = tmp
-      tran[value] = label
-      colors[value] = item.dict.tagColors && item.dict.tagColors[value] || undefined
-      return { label, value, disabled, indeterminate }
-    })
+    if (item.formType === 'treeSelect' || item.formType === 'tree-select') {
+      const childrenName = (item.dict.props && item.dict.props.children) || 'children'
+      const walk = (node) => {
+        const label = node[(item.dict.props && item.dict.props.label) || labelName]
+        let tmp = node[(item.dict.props && item.dict.props.value) || valueName]
+        let disabled = (typeof node['disabled'] == 'undefined') ? false : ( node['disabled'] === true ? true : false )
+        let indeterminate = (typeof node['indeterminate'] == 'undefined') ? false : ( node['indeterminate'] === true ? true : false )
+        let value
+        if (item.dict.name || item.dict.data) value = tmp?.toString() ?? tmp
+        else if (tmp === 'true') value = true
+        else if (tmp === 'false') value = false
+        else value = tmp
+        tran[value] = label
+        colors[value] = item.dict.tagColors && item.dict.tagColors[value] || undefined
+        const childrenArr = node[childrenName]
+        const children = (isArray(childrenArr) && childrenArr.length > 0) ? childrenArr.map(walk) : undefined
+        return children ? { label, value, disabled, indeterminate, children } : { label, value, disabled, indeterminate }
+      }
+      data = tmpArr.map(walk)
+    } else {
+      data = tmpArr.map(dicItem => {
+        const label = dicItem[(item.dict.props && item.dict.props.label) || labelName]
+        let tmp = dicItem[(item.dict.props && item.dict.props.value) || valueName]
+        let disabled = (typeof dicItem['disabled'] == 'undefined') ? false : ( dicItem['disabled'] === true ? true : false )
+        let indeterminate = (typeof dicItem['indeterminate'] == 'undefined') ? false : ( dicItem['indeterminate'] === true ? true : false )
+        let value
+        if (item.dict.name || item.dict.data) value = tmp?.toString() ?? tmp
+        else if (tmp === 'true') value = true
+        else if (tmp === 'false') value = false
+        else value = tmp
+        tran[value] = label
+        colors[value] = item.dict.tagColors && item.dict.tagColors[value] || undefined
+        return { label, value, disabled, indeterminate }
+      })
+    }
   } else {
     data = tmpArr
   }
@@ -86,6 +107,7 @@ export const handlerDictProps = (item, tmpArr) => {
 }
 
 export const loadDict = async (dictList, item, sourceList = [], maFormObject = {}) => {
+
   if (! allowUseDictComponent.includes(item.formType)) {
     return
   }
