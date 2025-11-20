@@ -101,10 +101,10 @@
                     <a-select style="width: 100%" v-model="formOptions.tree_id" allow-clear allow-search
                       placeholder="请选择树表的主ID">
                       <a-option class="w-full" v-for="(item, index) in form.columns"
-                        :label="item.column_name + ' - ' + item.column_comment" :value="item.column_name" :key="index">
+                        :label="item.column_name + (item.column_comment ? ' - ' + item.column_comment : '')" :value="item.column_name" :key="index">
                         <div class="flex justify-between w-full">
                           <span>{{ item.column_name }}</span>
-                          <span>{{ item.column_comment }}</span>
+                          <span>{{ item.column_comment ? item.column_comment : '' }}</span>
                         </div>
                       </a-option>
                     </a-select>
@@ -116,10 +116,10 @@
                     <a-select style="width: 100%" v-model="formOptions.tree_parent_id" allow-clear allow-search
                       placeholder="请选择树表的父ID">
                       <a-option class="w-full" v-for="(item, index) in form.columns"
-                        :label="item.column_name + ' - ' + item.column_comment" :value="item.column_name" :key="index">
+                        :label="item.column_name + (item.column_comment ? ' - ' + item.column_comment : '')" :value="item.column_name" :key="index">
                         <div class="flex justify-between w-full">
                           <span>{{ item.column_name }}</span>
-                          <span>{{ item.column_comment }}</span>
+                          <span>{{ item.column_comment ? item.column_comment : '' }}</span>
                         </div>
                       </a-option>
                     </a-select>
@@ -131,10 +131,10 @@
                     <a-select style="width: 100%" v-model="formOptions.tree_name" allow-clear allow-search
                       placeholder="请选择树表的主ID">
                       <a-option class="w-full" v-for="(item, index) in form.columns"
-                        :label="item.column_name + ' - ' + item.column_comment" :value="item.column_name" :key="index">
+                        :label="item.column_name + (item.column_comment ? ' - ' + item.column_comment : '')" :value="item.column_name" :key="index">
                         <div class="flex justify-between w-full">
                           <span>{{ item.column_name }}</span>
-                          <span>{{ item.column_comment }}</span>
+                          <span>{{ item.column_comment ? item.column_comment : '' }}</span>
                         </div>
                       </a-option>
                     </a-select>
@@ -268,7 +268,7 @@
             <a-checkbox-group direction="vertical" v-model="form.generate_menus" class="mt-3"
               :default-value="form.generate_menus">
               <a-checkbox :value="menu.value" v-for="(menu, index) in vars.menuList" :key="index">
-                {{ menu.name + '　-　' + menu.comment }}
+                {{ menu.name + (menu.comment ? '　-　' + menu.comment : '') }}
               </a-checkbox>
             </a-checkbox-group>
           </a-tab-pane>
@@ -409,7 +409,7 @@ const init = () => {
   // 请求菜单列表
   menuApi.tree({ onlyMenu: true }).then( res => { 
     menus.value = res.data
-    menus.value.unshift({ id: 0, value: 0, label: '顶级菜单' })
+    // menus.value.unshift({ id: 0, value: 0, label: '顶级菜单' })
   })
   // 请求角色列表
   roleApi.getList().then( res => roles.value = res.data )
