@@ -47,7 +47,7 @@
           <a-option value="ma-slide-up">{{ $t('sys.animate.sliderUp') }}</a-option>
         </a-select>
       </a-form-item>
-      <a-form-item :label="$t('sys.dark')" :help="$t('sys.darkHelp')" v-if="currentSkin === 'devinggo'">
+      <a-form-item :label="$t('sys.dark')" :help="$t('sys.darkHelp')" v-if="appStore.skin === 'default'">
         <a-switch v-model="form.mode" @change="handleSettingMode" />
       </a-form-item>
       <a-form-item :label="$t('sys.tag')" :help="$t('sys.tagHelp')">
