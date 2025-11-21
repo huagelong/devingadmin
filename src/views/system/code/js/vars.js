@@ -2,7 +2,7 @@ export const menuList = [
   { name: '新增', value: 'save', comment: '勾选生成新增数据按钮菜单及接口' },
   { name: '更新', value: 'update', comment: '勾选生成更新数据按钮菜单及接口' },
   { name: '读取', value: 'read', comment: '勾选生成读取数据按钮菜单及接口' },
-  { name: '删除', value: 'delete', comment: '勾选生成真实删除按钮菜单及接口' },
+  { name: '删除', value: 'delete', comment: '勾选生成软删除按钮菜单及接口' },
   { name: '回收站列表', value: 'recycle', comment: '勾选生成移到回收站列表、真实删除、恢复菜单及接口，确定该表有deleted_at字段，且模型引入了软删除。' },
   { name: '修改状态', value: 'changeStatus', comment: '勾选生成修改状态按钮菜单及接口，该接口用于单个字段状态修改' },
   { name: '自增自减', value: 'numberOperation', comment: '勾选生成数据自增自减按钮菜单及接口，该接口用于单个字段增减操作' },
