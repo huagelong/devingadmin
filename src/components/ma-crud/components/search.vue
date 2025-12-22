@@ -40,6 +40,7 @@ import MaFormPicker from './searchFormItem/form-picker.vue'
 import MaFormSelect from './searchFormItem/form-select.vue'
 import MaFormCascader from './searchFormItem/form-cascader.vue'
 import MaFormTreeSelect from './searchFormItem/form-tree-select.vue'
+import MaFormUserSelect from './searchFormItem/form-user-select.vue'
 import { cloneDeep, isFunction } from "lodash"
 
 const options = inject('options')
@@ -103,6 +104,7 @@ const componentList = ref({
   'MaFormPicker': markRaw(MaFormPicker),
   'MaFormCascader': markRaw(MaFormCascader),
   'MaFormTreeSelect': markRaw(MaFormTreeSelect),
+  'MaFormUserSelect': markRaw(MaFormUserSelect),
   'MaFormInput': markRaw(MaFormInput),
 })
 
@@ -115,6 +117,8 @@ const getComponentName = (formType) => {
     return componentList.value['MaFormCascader']
   } else if (formType === 'tree-select') {
     return componentList.value['MaFormTreeSelect']
+  } else if (formType === 'user-select') {
+    return componentList.value['MaFormUserSelect']
   } else {
     return componentList.value['MaFormInput']
   }

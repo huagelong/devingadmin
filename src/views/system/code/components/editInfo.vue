@@ -92,6 +92,15 @@
                 </a-form-item>
               </a-col>
             </a-row>
+            <a-row :gutter="24">
+              <a-col :xs="24" :md="12" :xl="12">
+                <a-form-item label="模板类型" field="tpl_type" label-col-flex="auto" :label-col-style="{ width: '100px' }" extra="选择Vue代码生成的模板风格">
+                  <a-select style="width: 100%" v-model="form.tpl_type"
+                    :options="[{ label: 'default', value: 'default' }, { label: 'ruoyi', value: 'ruoyi' }]" allow-clear
+                    allow-search placeholder="请选择模板类型" />
+                </a-form-item>
+              </a-col>
+            </a-row>
             <div v-if="form.type === 'tree'">
               <a-divider orientation="left">树表配置</a-divider>
               <a-row :gutter="24">
@@ -264,7 +273,7 @@
             </a-table>
           </a-tab-pane>
           <a-tab-pane title="菜单配置" key="menu_config">
-            <a-alert title="提示">未选择的菜单，后端也对应不生成方法。注意：列表按钮菜单是默认的</a-alert>
+            <a-alert title="提示">未选择的菜单，不影响后端生成对应方法（修改状态，自增自减除外）。注意：列表按钮菜单是默认的</a-alert>
             <a-checkbox-group direction="vertical" v-model="form.generate_menus" class="mt-3"
               :default-value="form.generate_menus">
               <a-checkbox :value="menu.value" v-for="(menu, index) in vars.menuList" :key="index">
@@ -309,6 +318,7 @@ const notNeedSettingComponents = ref([
 
 const form = ref({
   generate_menus: ['save', 'update' , 'read', 'delete' , 'recycle', 'changeStatus', 'numberOperation', 'import', 'export'],
+  tpl_type: 'default',
   columns: [],
 })
 
@@ -354,8 +364,10 @@ const save = async (done) => {
     }
     return false
   }
+  console.log('[编辑] 保存表单，模板类型:', form.value.tpl_type)
   form.value.options = formOptions.value
   const response = await generate.update(form.value)
+  console.log('[编辑] 保存结果，成功:', response?.success)
   response && response.success && Message.success(response.message)
   if (response && response.success) {
     emit('success', true)

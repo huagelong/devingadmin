@@ -117,6 +117,9 @@ export const loadDict = async (dictList, item, sourceList = [], maFormObject = {
     if (response.data) {
       dictList[dataIndex] = handlerDictProps(item, response.data)
     }
+  } else if (item.dict.remoteSearch) {
+    // 远程搜索模式，不预加载数据
+    dictList[dataIndex] = []
   } else if (item.dict.remote) {
       let requestData = {
         openPage: item.dict?.openPage ?? false,
