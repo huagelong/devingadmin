@@ -154,13 +154,22 @@
               </template>
               <template v-else-if="row.dict && row.dict.translation">
                 <template v-if="isArray(get(record, row.dataIndex))">
-                  <a-tag v-for="item in get(record, row.dataIndex)" class="ml-1">{{ getDataIndex(row, item) }}</a-tag>
+                  <!-- 如果有远程翻译的标签数据，使用_labels显示 -->
+                  <template v-if="record[`${row.dataIndex}_labels`]">
+                    <a-tag v-for="(label, index) in record[`${row.dataIndex}_labels`]" :key="index" class="ml-1">{{ label }}</a-tag>
+                  </template>
+                  <template v-else>
+                    <a-tag v-for="item in get(record, row.dataIndex)" class="ml-1">{{ getDataIndex(row, item) }}</a-tag>
+                  </template>
                 </template>
                 <a-tag v-else-if="row.dict.tagColors" :color="getTagColor(row, record)">
                   {{ getDataIndex(row, record) }}
                 </a-tag>
                 <a-tag v-else-if="row.dict.tagColor" :color="row.dict.tagColor">{{ getDataIndex(row, record) }}</a-tag>
                 <span v-else>{{ getDataIndex(row, record) }}</span>
+              </template>
+              <template v-else-if="row.remote">
+                <span>{{ record[`${row.dataIndex}_translate`] || record[row.dataIndex] }}</span>
               </template>
               <template v-else-if="row.dataIndex && row.dataIndex.indexOf('.') !== -1">
                 {{ get(record, row.dataIndex) }}

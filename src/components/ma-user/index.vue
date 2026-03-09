@@ -1,12 +1,12 @@
 <template>
   <div class="ma-content-block">
-    <a-space class="flex">
+    <a-space class="w-full">
       <a-button type="primary" @click="visible = true">
         <template #icon><icon-select-all /></template>{{ props.text }}
       </a-button>
       <a-tag size="large" color="blue" v-if="props.isEcho">已选择 {{ isArray(selecteds) ? selecteds.length : 0 }} 位</a-tag>
-      <a-input-tag v-model="userList" v-if="props.isEcho" :style="{ width: '320px' }"
-        :placeholder="'请点击前面按钮' + props.text" :max-tag-count="3" disabled />
+      <a-input-tag v-model="userList" v-if="props.isEcho" class="flex-1"
+        :placeholder="'请点击前面按钮'" :max-tag-count="3" disabled />
     </a-space>
 
     <a-modal v-model:visible="visible" width="1000px" draggable :on-before-ok="close" unmountOnClose>

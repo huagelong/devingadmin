@@ -176,6 +176,7 @@ import { ref, watch, provide, nextTick, onMounted, onUnmounted } from 'vue'
 import defaultOptions from './js/defaultOptions'
 import { loadDict } from '@cps/ma-form/js/networkRequest.js'
 import ColumnService from '@cps/ma-form/js/columnService'
+import { remoteTranslate } from '@/utils/remoteTranslate.js'
 
 import MaSearch from './components/search.vue'
 import MaForm from './components/form.vue'
@@ -414,6 +415,9 @@ const requestData = async () => {
     options.value.tabs.defaultKey = options.value.tabs?.defaultKey ?? options.value.tabs.data[0].value
     await tabChange(options.value.tabs?.defaultKey)
   }
+  
+  // 处理远程翻译
+  await handleRemoteTranslate()
 }
 
 const initRequestParams = () => {
@@ -447,6 +451,9 @@ const requestHandle = async () => {
   }
   isFunction(options.value.afterRequest) && (tableData.value = options.value.afterRequest(tableData.value))
   loading.value = false
+  
+  // 处理远程翻译
+  await handleRemoteTranslate()
 }
 
 const refresh = async () => {
@@ -467,7 +474,12 @@ const refresh = async () => {
     await requestHandle()
   }
   selecteds.value = []
-  tableRef.value.selectAll(false)
+  if (tableRef.value) {
+    tableRef.value.selectAll(false)
+  }
+  
+  // 处理远程翻译
+  await handleRemoteTranslate()
 }
 
 const searchSubmitHandler = async (formData) => {
@@ -641,7 +653,9 @@ const switchDataType = async () => {
 
 const handlerExpand = () => {
   expandState.value = ! expandState.value
-  expandState.value ? tableRef.value.expandAll(true) : tableRef.value.expandAll(false)
+  if (tableRef.value) {
+    expandState.value ? tableRef.value.expandAll(true) : tableRef.value.expandAll(false)
+  }
 }
 
 const handlerSort = async (name, type) => {
@@ -789,6 +803,30 @@ const getCurrentPage = () => requestParams.value[config.request.page]
 const getPageSize = () => requestParams.value[config.request.pageSize]
 const getTotal = () => total.value
 const initSearchColumns = () => crudSearchRef.value.initSearchColumns()
+
+/**
+ * 处理远程翻译
+ */
+const handleRemoteTranslate = async () => {
+  // 收集需要远程翻译的列
+  // 如果 column.remote 为 true，或者 dict.remoteSearch 存在，都认为需要远程翻译
+  const remoteColumns = columns.value.filter(column => {
+    // 直接从column.dict.remoteSearch读取，而不是从dicts中读取
+    return (column.dict && column.dict.remoteSearch) || (column.dict && column.dict.translationQuery)
+  })
+  
+  if (remoteColumns.length === 0) return
+  
+  // 构建翻译配置，从remoteSearch中读取translationUrl和props
+  const translateColumns = remoteColumns.map(column => ({
+    ...column,
+    remoteSearchConfig: column.dict?.remoteSearch || {},
+    translationQueryConfig: column.dict?.translationQuery || {},
+  }))
+  
+  // 批量翻译
+  await remoteTranslate.translateTableData(tableData.value, translateColumns)
+}
 
 /**
  * 获取column属性服务类

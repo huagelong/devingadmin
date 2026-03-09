@@ -1,6 +1,7 @@
 import CryptoJS from 'crypto-js';
 import uploadConfig from '@/config/upload';
 import CityLinkageJson from '@/components/ma-cityLinkage/lib/city.json';
+import commonApi from '@/api/common';
 
 const typeColor = (type = 'default') => {
   let color = '';
@@ -412,6 +413,48 @@ tool.arrSum = (arr) => {
   let sum = 0;
   arr.map((item) => (sum += item));
   return sum;
+};
+
+/**
+ * 获取字典数据
+ * @param {string} code - 字典编码
+ * @returns {Promise<Array>} 字典数据数组
+ * @example
+ * const dictData = await tool.getDict('data_status')
+ * // 返回 [{ label: '启用', value: '1', title: '启用', key: '1' }, ...]
+ */
+tool.getDict = async (code) => {
+  try {
+    const response = await commonApi.getDict(code);
+    return response?.data || [];
+  } catch (error) {
+    return [];
+  }
+};
+
+/**
+ * 获取字典中指定值对应的标签
+ * @param {string} code - 字典编码
+ * @param {string|number} value - 字典值
+ * @param {string} labelKey - 标签字段名，默认为 'label'
+ * @returns {Promise<string>} 对应的标签文本
+ * @example
+ * const label = await tool.getDictLabel('data_status', '1')
+ * // 返回 '启用'
+ */
+tool.getDictLabel = async (code, value, labelKey = 'label') => {
+  try {
+    const dictData = await tool.getDict(code);
+    if (!Array.isArray(dictData) || dictData.length === 0) {
+      return value;
+    }
+    const item = dictData.find(
+      (dict) => dict.value?.toString() === value?.toString() || dict.key?.toString() === value?.toString()
+    );
+    return item ? item[labelKey] : value;
+  } catch (error) {
+    return value;
+  }
 };
 
 export default tool;

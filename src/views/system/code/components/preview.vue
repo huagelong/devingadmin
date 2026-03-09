@@ -32,12 +32,15 @@
   const previewCode = ref([])
 
   const open = async (id) => {
+    console.log('[预览] 打开预览，表ID:', id)
     const response = await generate.preview({ id })
     if (response.success) {
       previewCode.value = response.data
       visible.value = true
+      console.log('[预览] 预览数据加载成功，代码数量:', previewCode.value.length)
     } else {
       Message.info(response.message)
+      console.warn('[预览] 预览加载失败:', response.message)
     }
   }
 

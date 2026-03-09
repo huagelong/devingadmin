@@ -19,6 +19,7 @@ import MaResourceButton from './ma-resource/button.vue'
 import MaUser from './ma-user/index.vue'
 import MaEditor from './ma-editor/index.vue'
 import MaWangEditor from './ma-wangEditor/index.vue'
+import MaMarkdownEditor from './ma-markdown-editor/index.vue'
 import MaIcon from './ma-icon/index.vue'
 import MaCodeEditor from './ma-codeEditor/index.vue'
 import MaUserInfo from './ma-userInfo/index.vue'
@@ -50,6 +51,7 @@ export default {
     Vue.component('MaUser', MaUser)
     Vue.component('MaEditor', MaEditor)
     Vue.component('MaWangEditor', MaWangEditor)
+    Vue.component('MaMarkdownEditor', MaMarkdownEditor)
     Vue.component('MaIcon', MaIcon)
     Vue.component('MaCodeEditor', MaCodeEditor)
     Vue.component('MaUserInfo', MaUserInfo)

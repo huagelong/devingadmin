@@ -15,10 +15,10 @@
         :fallback-option="props.component.fallbackOption" :show-extra-options="props.component.showExtraOptions"
         :value-key="props.component.valueKey" :search-delay="props.component.searchDelay" :limit="props.component.limit"
         :field-names="props.component.fieldNames" :scrollbar="props.component.scrollbar"
-        @input-value-change="rv('onInputValueChange', $event)" @change="handleCascaderChangeEvent($event)"
+        @input-value-change="handleInputValueChange" @change="handleCascaderChangeEvent($event)"
         @remove="rv('onRemove', $event)" @popup-visible-change="rv('onPopupVisibleChange', $event)"
         @dropdown-scroll="rv('onDropdownScroll')" @dropdown-reach-bottom="rv('onDropdownReachBottom')"
-        @exceed-limit="rv('onExceedLimit', $event)" @search="rv('onSearch', $event)">
+        @exceed-limit="rv('onExceedLimit', $event)" @search="handleRemoteSearch">
         <template #header v-if="props.component.multiple && props.component.selectAll === true">
           <div style="padding: 6px 12px;">
             <a-space>
@@ -48,6 +48,7 @@ import MaFormItem from './form-item.vue'
 import { get, isUndefined, set, xor, isObject, indexOf } from 'lodash'
 import { runEvent } from '../js/event.js'
 import { handlerCascader, loadDict } from '../js/networkRequest.js'
+import { remoteTranslate } from '@/utils/remoteTranslate.js'
 
 const props = defineProps({
   component: Object,
@@ -130,10 +131,88 @@ const handleCascaderChangeEvent = async (value) => {
     await handlerCascader(value, component, columns.value, dictList.value, formModel.value)
   }
   nextTick(() => formLoading.value = false)
+}
 
+// 远程搜索处理
+const handleRemoteSearch = async (searchValue) => {
+  // 如果不是远程搜索模式，使用原有逻辑
+  if (!props.component.dict?.remoteSearch) {
+    rv('onSearch', searchValue)
+    return
+  }
+
+  // 远程搜索模式
+  if (!searchValue || searchValue.length < 2) {
+    dictList.value[dictIndex] = []
+    return
+  }
+
+  try {
+    // 直接使用remoteSearch配置
+    const remoteConfig = props.component.dict.remoteSearch
+    const searchResult = await remoteTranslate.search(searchValue, remoteConfig)
+    
+    // 获取字段映射配置
+    const labelField = remoteConfig.searchProps?.labelField || 'name'
+    const valueField = remoteConfig.searchProps?.valueField || 'id'
+    
+    dictList.value[dictIndex] = searchResult.map(item => ({
+      label: item[labelField],
+      value: item[valueField],
+      disabled: false
+    }))
+  } catch (error) {
+    console.error('远程搜索失败:', error)
+    dictList.value[dictIndex] = []
+  }
+}
+
+// 输入值变化处理
+const handleInputValueChange = (value) => {
+  if (props.component.dict?.remoteSearch) {
+    // 远程搜索模式下，输入变化时触发搜索
+    handleRemoteSearch(value)
+  } else {
+    rv('onInputValueChange', value)
+  }
+}
+
+// 加载初始值的翻译
+const loadInitialTranslation = async () => {
+  if (!props.component.dict?.remoteSearch) return
+  
+  const currentValue = value.value
+  if (!currentValue) return
+  
+  const remoteConfig = props.component.dict.translationQuery
+  const translationUrl = remoteConfig.translationUrl
+  
+  if (!translationUrl) return
+  
+  try {
+    // 确保是数组格式
+    const ids = Array.isArray(currentValue) ? currentValue.filter(id => id) : [currentValue]
+    
+    if (ids.length === 0) return
+    
+    const translations = await remoteTranslate.translateIds(ids, remoteConfig)
+    
+    // 将翻译结果转换为选项格式
+    const options = ids.map(id => ({
+      label: translations[id] || id,
+      value: id,
+      disabled: false
+    }))
+    
+    dictList.value[dictIndex] = options
+  } catch (error) {
+    console.error('加载初始翻译失败:', error)
+  }
 }
 
 rv('onCreated')
-onMounted(() => {
+onMounted(async () => {
+  // 如果是远程搜索模式且有初始值，加载翻译
+  await loadInitialTranslation()
 })
 </script>

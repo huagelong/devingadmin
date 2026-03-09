@@ -90,7 +90,7 @@ class Ws {
             })
             .onMessage((i, ev) => {
                 const message = JSON.parse(ev.data);
-                console.log(`received message:${ev.data}`);
+                // console.log(`received message:${ev.data}`);
                 const isContain = this._dispath_messageCallbackQueue(
                     message,
                     i,

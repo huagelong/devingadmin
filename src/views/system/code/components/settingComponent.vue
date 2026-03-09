@@ -195,7 +195,16 @@ const form = ref({
 
 const open = (record) => {
   row.value = record
-  form.value = record.options ? record.options : { collection: [] }
+  let options = record.options
+  // 如果 options 是字符串，则解析为对象
+  if (typeof options === 'string') {
+    try {
+      options = JSON.parse(options)
+    } catch (e) {
+      options = null
+    }
+  }
+  form.value = options && typeof options === 'object' ? options : { collection: [] }
   visible.value = true
 }
 
